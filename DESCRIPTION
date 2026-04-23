@@ -1,0 +1,55 @@
+Package: SAIGEQTL
+Type: Package
+Title: Scalable and Accurate Expression Quantitative Trait Locus Mapping
+    for Single-Cell Studies
+Version: 0.3.6.0
+Date: 2026-4-7
+Authors@R: c(
+    person("Wei", "Zhou", email = "wzhou@broadinstitute.org", role = c("cre", "aut")),
+    person("Anna", "Cuomo", email = "annacuomo92@gmail.com", role = c("aut", "ctb")),
+    person("Linfeng", "Hu", email = "lhu@broadinstitute.org", role = c("aut", "ctb"))
+    )
+Description: Implements the Scalable and Accurate Implementation of
+    Generalized Poisson mixed model for expression quantitative trait locus
+    (eQTL) mapping at the single-cell level. Provides functions for fitting
+    null models, performing association tests, and handling large-scale
+    single-cell genomics data efficiently.
+License: GPL (>= 2)
+URL: https://github.com/weizhou0/SAIGEQTL
+BugReports: https://github.com/weizhou0/SAIGEQTL/issues
+Depends: R (>= 3.5.0)
+Imports:
+    data.table,
+    dbplyr,
+    dplyr,
+    MASS,
+    Matrix,
+    methods,
+    nlme,
+    optparse,
+    Rcpp (>= 1.0.7),
+    RcppArmadillo (>= 0.10.7.5),
+    RcppNumerical,
+    RcppParallel,
+    RhpcBLASctl,
+    RSQLite
+Suggests:
+    BiocStyle,
+    furrr,
+    knitr,
+    rmarkdown,
+    R.utils,
+    testthat (>= 3.0.0)
+LinkingTo:
+    BH,
+    Rcpp,
+    RcppArmadillo (>= 0.10.7.5),
+    RcppEigen,
+    RcppParallel
+VignetteBuilder: knitr
+SystemRequirements: GNU make, CUDA Toolkit >= 11.0 (optional, for GPU acceleration)
+biocViews: GeneExpression, GeneticVariability, Genetics, Transcriptomics,
+    SingleCell, Regression
+Encoding: UTF-8
+NeedsCompilation: yes
+RoxygenNote: 7.1.2

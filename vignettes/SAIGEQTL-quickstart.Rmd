@@ -1,0 +1,101 @@
+---
+title: "SAIGEQTL: Quick Start Guide"
+author:
+- name: Wei Zhou
+- name: Anna Cuomo
+- name: Linfeng Hu
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{SAIGEQTL: Quick Start Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,
+    eval = FALSE,
+    message = FALSE,
+    warning = FALSE
+)
+```
+
+# Introduction
+
+SAIGEQTL implements the Scalable and Accurate Implementation of Generalized
+Poisson mixed model for expression quantitative trait locus (eQTL) mapping
+at the single-cell level.
+
+This vignette provides a quick start guide to using SAIGEQTL for eQTL
+analysis.
+
+## Installation
+
+```{r install, eval=FALSE}
+# From Bioconductor (when available)
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("SAIGEQTL")
+```
+
+## Loading the Package
+
+```{r load}
+library(SAIGEQTL)
+```
+
+# Workflow Overview
+
+A typical SAIGEQTL analysis consists of two main steps:
+
+1. **Fit the null model** using `fitNULLGLMM_multiV()`
+2. **Perform association testing** using `SPAGMMATtest()`
+
+## Step 1: Fit the Null Model
+
+The null model accounts for population structure and relatedness using a
+genetic relationship matrix (GRM).
+
+```{r fit-null, eval=FALSE}
+# Example: Fit null model
+# fitNULLGLMM_multiV(
+#     phenoFile = "phenotype.txt",
+#     phenoCol = "expression",
+#     covarColList = c("age", "sex", "PC1", "PC2"),
+#     sampleIDColinphenoFile = "sample_id",
+#     ...
+# )
+```
+
+## Step 2: Perform Association Testing
+
+After fitting the null model, perform variant-level or region-based
+association testing.
+
+```{r test, eval=FALSE}
+# Example: Run association test
+# SPAGMMATtest(
+#     modelFile = "null_model.rda",
+#     genoFile = "genotypes.bgen",
+#     outputFile = "results.txt",
+#     ...
+# )
+```
+
+# Additional Resources
+
+For detailed documentation and examples, please see:
+
+- Package documentation: `?fitNULLGLMM_multiV`, `?SPAGMMATtest`
+- GitHub repository: <https://github.com/weizhou0/SAIGEQTL>
+
+# Session Information
+
+```{r sessionInfo, eval=TRUE}
+sessionInfo()
+```

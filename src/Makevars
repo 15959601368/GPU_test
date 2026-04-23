@@ -1,0 +1,62 @@
+# Makevars for SAIGEQTL with optional GPU (CUDA) support
+#
+# To enable GPU acceleration:
+#   Option A: set USE_GPU=1 before R CMD INSTALL, e.g.:
+#     USE_GPU=1 R CMD INSTALL SAIGEQTL
+#
+#   Option B: create/edit ~/.R/Makevars and add:
+#     USE_GPU=1
+#
+# Requirements for GPU build:
+#   - CUDA toolkit (nvcc, cuBLAS) >= 11.0
+#   - R compiled with the same toolchain
+#
+# When USE_GPU is not set, this compiles as pure CPU (identical to upstream).
+
+# Common flags
+PKG_CPPFLAGS = -std=c++14 -DARMA_64BIT_WORD=1 -D__STDC_FORMAT_MACROS -fpic -Wall
+CXX_STD = CXX14
+
+# RcppParallel
+PKG_LIBS += $(shell ${R_HOME}/bin/Rscript -e "RcppParallel::RcppParallelLibs()")
+
+# ========== GPU support (conditional) ==========
+ifdef USE_GPU
+
+# Detect CUDA path
+CUDA_PATH ?= /usr/local/cuda
+NVCC       := $(CUDA_PATH)/bin/nvcc
+
+# CUDA architecture for RTX 3080 Ti (Ampere, sm_86)
+NVCC_ARCH := -gencode arch=compute_86,code=sm_86
+
+# GPU-specific preprocessor flag
+PKG_CPPFLAGS += -DUSE_GPU -I$(CUDA_PATH)/include
+
+# Compile .cu files with nvcc
+gpu_crossProd.o: gpu_crossProd.cu gpu_crossProd.h
+	$(NVCC) $(NVCC_ARCH) -O3 -Xcompiler -fPIC -c -o $@ $<
+
+# Link cuBLAS
+PKG_LIBS += -L$(CUDA_PATH)/lib64 -lcublas -lcudart -lstdc++
+
+# Append the CUDA object
+OBJECTS = RcppExports.o GENO_null.o getMem.o VCF.o BGEN.o PLINK.o SAIGE_test.o \
+          SPA_binary.o SPA.o SPA_survival.o UTIL.o Main.o test.o CCT.o \
+          Binary_HyperGeo.o Binary_ComputeExact.o Binary_global.o \
+          Binary_ComputeExactSKATO.o Binary_resampling.o Binary_Permu_SKAT.o \
+          ER_binary_func.o LDmat.o SKATO.o qfc.o gpu_manager.o gpu_crossProd.o
+
+else
+# ========== Pure CPU build (default) ==========
+
+OBJECTS = RcppExports.o GENO_null.o getMem.o VCF.o BGEN.o PLINK.o SAIGE_test.o \
+          SPA_binary.o SPA.o SPA_survival.o UTIL.o Main.o test.o CCT.o \
+          Binary_HyperGeo.o Binary_ComputeExact.o Binary_global.o \
+          Binary_ComputeExactSKATO.o Binary_resampling.o Binary_Permu_SKAT.o \
+          ER_binary_func.o LDmat.o SKATO.o qfc.o gpu_manager.o
+
+endif
+
+all: $(SHLIB)
+$(SHLIB): ${OBJECTS} Makevars

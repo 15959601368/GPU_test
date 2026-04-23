@@ -1,0 +1,30 @@
+# Pixi environment
+.pixi/
+pixi.lock
+
+# R build artifacts
+*.tar.gz
+*.Rcheck/
+src/*.o
+src/*.so
+src/*.dll
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Compiled CUDA objects
+src/gpu_crossProd.o
+src/gpu_manager.o
+
+# Temporary files
+*.tmp
+*.bak
